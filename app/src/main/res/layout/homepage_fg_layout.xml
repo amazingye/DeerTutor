@@ -11,4 +11,8 @@
         android:layout_centerInParent="true"
         android:text="这是首页"/>
 
+
+
+
+
 </RelativeLayout>
