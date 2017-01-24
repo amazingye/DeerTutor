@@ -45,8 +45,8 @@ public class MineFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 switch (position){
                     case 0:
-                        Intent registerIntent = new Intent(getActivity(),RegisterActivity.class);
-                        startActivity(registerIntent);
+                        Intent LoginIntent = new Intent(getActivity(),LoginActivity.class);
+                        startActivity(LoginIntent);
                         break;
                 }
             }

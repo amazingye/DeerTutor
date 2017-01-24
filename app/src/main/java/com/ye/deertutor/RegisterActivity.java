@@ -2,7 +2,7 @@ package com.ye.deertutor;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +47,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
                     public void done(BmobUser s, BmobException e) {
                         if(e==null){
                             Toast.makeText(RegisterActivity.this,
-                                    "succeed",Toast.LENGTH_LONG).show();
+                                    "注册成功",Toast.LENGTH_LONG).show();
                         }else{
                             e.printStackTrace();
                         }
