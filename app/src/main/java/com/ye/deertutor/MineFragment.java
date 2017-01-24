@@ -1,6 +1,7 @@
 package com.ye.deertutor;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -44,6 +45,8 @@ public class MineFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 switch (position){
                     case 0:
+                        Intent registerIntent = new Intent(getActivity(),RegisterActivity.class);
+                        startActivity(registerIntent);
                         break;
                 }
             }

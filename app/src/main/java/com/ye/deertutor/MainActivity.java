@@ -42,7 +42,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         fragmentManager = getSupportFragmentManager();
         initView();
         setChoiceItem(0);
-        Bmob.initialize(this, "Your Application ID");
+        Bmob.initialize(this, "cfe590c37becfa3b8042d7cadefaa0be");
     }
 
 
