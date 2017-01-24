@@ -1,16 +1,16 @@
 package com.ye.deertutor;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import cn.bmob.v3.Bmob;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener{
 
@@ -42,6 +42,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         fragmentManager = getSupportFragmentManager();
         initView();
         setChoiceItem(0);
+        Bmob.initialize(this, "Your Application ID");
     }
 
 

@@ -3,6 +3,10 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
+
+
+    useLibrary 'org.apache.http.legacy'
+
     defaultConfig {
         applicationId "com.ye.deertutor"
         minSdkVersion 15
@@ -11,12 +15,26 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+
+
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main.jniLibs.srcDirs = ['libs']
+    }
+
+    //添加于1.23 18:23
+    packagingOptions{
+        exclude('META-INF/rxjava.properties')
+    }
+
 }
 
 dependencies {
@@ -27,4 +45,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:support-v4:25.1.0'
     testCompile 'junit:junit:4.12'
+
+    compile 'cn.bmob.android:bmob-sdk:3.5.3'
+    compile 'cn.bmob.android:http-legacy:1.0'
 }
