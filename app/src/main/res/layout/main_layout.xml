@@ -37,7 +37,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/homepage" />
+                    android:src="@mipmap/homepage" />
                 <TextView
                     android:id="@+id/homepage_text"
                     android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/course" />
+                    android:src="@mipmap/course" />
                 <TextView
                     android:id="@+id/course_text"
                     android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/mine" />
+                    android:src="@mipmap/mine" />
                 <TextView
                     android:id="@+id/mine_text"
                     android:layout_width="wrap_content"
