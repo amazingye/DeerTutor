@@ -11,8 +11,53 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />-->
 
-    <ListView
+    <!--<ListView
         android:id="@+id/mine_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"></ListView>-->
+
+    <LinearLayout
+        android:id="@+id/touser"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/royalblue"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/headicon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="20dp"/>
+
+        <TextView
+            android:textColor="@color/white"
+            android:id="@+id/usernameshowtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登陆/注册"
+            android:textSize="22dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="23dp"/>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/logoutlayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="80dp"
+        android:orientation="horizontal"
+        android:background="@color/aqua">
+
+        <TextView
+            android:id="@+id/logouttext"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textSize="23dp"
+            android:text="退出登陆"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
 </RelativeLayout>

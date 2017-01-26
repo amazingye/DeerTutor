@@ -1,22 +1,21 @@
-package com.ye.deertutor;
+package com.ye.deertutor.Fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+
+import com.ye.deertutor.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomepageFragment extends Fragment {
+public class CourseFragment extends Fragment {
 
 
-    public HomepageFragment() {
+    public CourseFragment() {
         // Required empty public constructor
     }
 
@@ -24,15 +23,8 @@ public class HomepageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.homepage_fg_layout,container,false);
+        View view = inflater.inflate(R.layout.course_fg_layout,container,false);
         return view;
-
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-
     }
 
 }

@@ -1,4 +1,4 @@
-package com.ye.deertutor;
+package com.ye.deertutor.Activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +9,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.ye.deertutor.Fragments.CourseFragment;
+import com.ye.deertutor.Fragments.HomepageFragment;
+import com.ye.deertutor.Fragments.MineFragment;
+import com.ye.deertutor.R;
+import com.ye.deertutor.models.DeerUser;
 
 import cn.bmob.v3.Bmob;
 
@@ -64,7 +70,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         homePageLayout.setOnClickListener(MainActivity.this);
         courseLayout.setOnClickListener(MainActivity.this);
         mineLayout.setOnClickListener(MainActivity.this);
-
     }
 
 

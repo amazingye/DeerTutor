@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:stretchColumns="1"
-    tools:context="com.ye.deertutor.RegisterActivity">
+    tools:context="com.ye.deertutor.Activities.RegisterActivity">
 
     <TableRow>
         <TextView

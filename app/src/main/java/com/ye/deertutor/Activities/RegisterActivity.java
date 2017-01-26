@@ -1,4 +1,4 @@
-package com.ye.deertutor;
+package com.ye.deertutor.Activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.ye.deertutor.R;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
