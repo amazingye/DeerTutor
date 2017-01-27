@@ -24,6 +24,8 @@ public class DeerUser extends BmobUser{
         return type;
     }
 
+
+
     public void setSex(String sex){
         this.sex = sex;
     }

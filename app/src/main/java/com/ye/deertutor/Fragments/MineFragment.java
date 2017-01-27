@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.ye.deertutor.Activities.LoginActivity;
 import com.ye.deertutor.R;
+import com.ye.deertutor.models.DeerUser;
 
 import cn.bmob.v3.BmobUser;
 
@@ -26,7 +27,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     private LinearLayout toUserLayout;
     private TextView userNameShowText;
     private RelativeLayout logoutLayout;
-    BmobUser currentUser;
+    DeerUser currentUser;
 
     public MineFragment() {
         // Required empty public constructor
@@ -52,13 +53,13 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.touser:
-                if((currentUser = BmobUser.getCurrentUser()) == null){
+                if((currentUser = BmobUser.getCurrentUser(DeerUser.class)) == null){
                     Intent toLoginIntent = new Intent(getActivity(),LoginActivity.class);
                     startActivity(toLoginIntent);
                 }
                 break;
             case R.id.logoutlayout:
-                currentUser = BmobUser.getCurrentUser();
+                currentUser = BmobUser.getCurrentUser(DeerUser.class);
                 currentUser.logOut();
                 Toast.makeText(getActivity(),"您已退出当前账户",Toast.LENGTH_LONG).show();
                 userNameShowText.setText("登陆/注册");
@@ -70,7 +71,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
         toUserLayout = (LinearLayout)getActivity().findViewById(R.id.touser);
         userNameShowText = (TextView)getActivity().findViewById(R.id.usernameshowtext);
         logoutLayout = (RelativeLayout) getActivity().findViewById(R.id.logoutlayout);
-        currentUser = BmobUser.getCurrentUser();
+        currentUser = BmobUser.getCurrentUser(DeerUser.class);
         if(currentUser != null){
             userNameShowText.setText(currentUser.getUsername().toString());
         }

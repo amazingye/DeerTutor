@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ye.deertutor.R;
+import com.ye.deertutor.models.DeerUser;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -48,12 +49,12 @@ public class LoginActivity extends Activity implements View.OnClickListener{
             case R.id.loginbutton:
                 String userName = usernameInput.getText().toString();
                 String pswd = pswdInput.getText().toString();
-                final BmobUser user = new BmobUser();
+                DeerUser user = new DeerUser();
                 user.setUsername(userName);
                 user.setPassword(pswd);
-                user.login(new SaveListener<BmobUser>() {
+                user.login(new SaveListener<DeerUser>() {
                     @Override
-                    public void done(BmobUser bmobUser, BmobException e) {
+                    public void done(DeerUser deerUser, BmobException e) {
                         if(e==null){
                             Toast.makeText(LoginActivity.this,"登陆成功",
                                     Toast.LENGTH_LONG).show();

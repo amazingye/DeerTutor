@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ye.deertutor.R;
+import com.ye.deertutor.models.DeerUser;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -40,13 +41,15 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
                 String pswd = pswdEdit.getText().toString();
                 String email = emailEdit.getText().toString();
 
-                BmobUser bmobUser = new BmobUser();
-                bmobUser.setUsername(nickName);
-                bmobUser.setPassword(pswd);
-                bmobUser.setEmail(email);
-                bmobUser.signUp(new SaveListener<BmobUser>() {
+                DeerUser deerUser = new DeerUser();
+                deerUser.setUsername(nickName);
+                deerUser.setPassword(pswd);
+                deerUser.setEmail(email);
+                deerUser.setSex("F");
+                deerUser.setType("parent");
+                deerUser.signUp(new SaveListener<DeerUser>() {
                     @Override
-                    public void done(BmobUser s, BmobException e) {
+                    public void done(DeerUser s, BmobException e) {
                         if(e==null){
                             Toast.makeText(RegisterActivity.this,
                                     "注册成功",Toast.LENGTH_LONG).show();
@@ -55,6 +58,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
                         }
                     }
                 });
+                finish();
+                break;
         }
     }
 }
