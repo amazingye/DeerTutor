@@ -27,7 +27,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     private LinearLayout toUserLayout;
     private TextView userNameShowText;
     private RelativeLayout logoutLayout;
-    DeerUser currentUser;
+    public DeerUser currentUser;
 
     public MineFragment() {
         // Required empty public constructor
@@ -57,6 +57,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
                     Intent toLoginIntent = new Intent(getActivity(),LoginActivity.class);
                     startActivity(toLoginIntent);
                 }
+
                 break;
             case R.id.logoutlayout:
                 currentUser = BmobUser.getCurrentUser(DeerUser.class);
@@ -73,7 +74,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
         logoutLayout = (RelativeLayout) getActivity().findViewById(R.id.logoutlayout);
         currentUser = BmobUser.getCurrentUser(DeerUser.class);
         if(currentUser != null){
-            userNameShowText.setText(currentUser.getUsername().toString());
+            userNameShowText.setText(currentUser.getUsername());
         }
     }
 }

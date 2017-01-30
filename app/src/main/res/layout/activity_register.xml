@@ -44,6 +44,26 @@
     </TableRow>
 
     <TableRow>
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="请问您是？" />
+
+        <RadioGroup
+            android:id="@+id/typerg"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/teacherrb"
+                android:text="教师"/>
+            <RadioButton
+                android:id="@+id/parentrb"
+                android:text="家长"/>
+
+        </RadioGroup>
+    </TableRow>
+
+    <TableRow>
         <Button
             android:id="@+id/registerbutton"
             android:text="注册"

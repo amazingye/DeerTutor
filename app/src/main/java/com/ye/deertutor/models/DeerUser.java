@@ -3,9 +3,7 @@ package com.ye.deertutor.models;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 
-/**
- * Created by X1 Carbon on 2017/1/27.
- */
+
 
 public class DeerUser extends BmobUser{
     private String sex;
@@ -23,7 +21,6 @@ public class DeerUser extends BmobUser{
     public String getType(){
         return type;
     }
-
 
 
     public void setSex(String sex){

@@ -2,23 +2,27 @@ package com.ye.deertutor.models;
 
 import cn.bmob.v3.BmobObject;
 
-/**
- * Created by X1 Carbon on 2017/1/27.
- */
 
 public class Teacher extends BmobObject {
-    private String userId;
+    //private String userId;
+    private DeerUser userId;
     private String sex;
     private String price;
     private String idCardNumber;
     private String experience;
     private String area;
 
-    public String getUserId(){
+    /*public String getUserId(){
+        return userId;
+    }*/
+    public DeerUser getUserId(){
         return userId;
     }
 
-    public void setUserId(String userId){
+    /*public void setUserId(String userId){
+        this.userId = userId;
+    }*/
+    public void setUserId(DeerUser userId){
         this.userId = userId;
     }
 

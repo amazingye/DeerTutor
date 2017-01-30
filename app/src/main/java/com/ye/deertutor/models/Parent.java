@@ -7,16 +7,16 @@ import cn.bmob.v3.BmobObject;
  */
 
 public class Parent extends BmobObject {
-    private String userId;
+    private DeerUser userId;
     private String sex;
     private String city;
     private String grade;
 
-    public String getUserId(){
+    public DeerUser getUserId(){
         return userId;
     }
 
-    public void setUserId(String userId){
+    public void setUserId(DeerUser userId){
         this.userId = userId;
     }
 
