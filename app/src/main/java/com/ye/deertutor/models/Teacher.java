@@ -4,24 +4,23 @@ import cn.bmob.v3.BmobObject;
 
 
 public class Teacher extends BmobObject {
-    //private String userId;
+
     private DeerUser userId;
     private String sex;
     private String price;
     private String idCardNumber;
-    private String experience;
+    private String teacherDescribe;
     private String area;
+    private String realName;
+    private String availableGrade;
+    private String availableSubject;
+    private String verifyStatus;
 
-    /*public String getUserId(){
-        return userId;
-    }*/
+
     public DeerUser getUserId(){
         return userId;
     }
 
-    /*public void setUserId(String userId){
-        this.userId = userId;
-    }*/
     public void setUserId(DeerUser userId){
         this.userId = userId;
     }
@@ -50,12 +49,12 @@ public class Teacher extends BmobObject {
         this.idCardNumber = idCardNumber;
     }
 
-    public String getExperience(){
-        return experience;
+    public String getTeacherDescribe(){
+        return teacherDescribe;
     }
 
-    public void setExperience(String experience){
-        this.experience = experience;
+    public void setTeacherDescribe(String teacherDesecribe){
+        this.teacherDescribe = teacherDesecribe;
     }
 
     public String getArea(){
@@ -64,5 +63,37 @@ public class Teacher extends BmobObject {
 
     public void setArea(String area){
         this.area = area;
+    }
+
+    public String getRealName(){
+        return realName;
+    }
+
+    public void setRealName(String realName){
+        this.realName = realName;
+    }
+
+    public String getVerifyStatus(){
+        return verifyStatus;
+    }
+
+    public void setVerifyStatus(String verifyStatus){
+        this.verifyStatus = verifyStatus;
+    }
+
+    public String getAvailableGrade(){
+        return availableGrade;
+    }
+
+    public void setAvailableGrade(String availableGrade){
+        this.availableGrade = availableGrade;
+    }
+
+    public String getAvailableSubject(){
+        return availableSubject;
+    }
+
+    public void setAvailableSubject(String availableSubject){
+        this.availableSubject = availableSubject;
     }
 }

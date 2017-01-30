@@ -29,7 +29,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.RegisterActivity" />
-        <activity android:name=".Activities.LoginActivity"></activity>
+        <activity android:name=".Activities.LoginActivity" />
+        <activity android:name=".Activities.TeacherInfoActivity" />
+        <activity android:name=".Activities.TeacherModifyActivity" />
+        <activity android:name=".Activities.ParentInfoActivity" />
+        <activity android:name=".Activities.ParentModifyActivity"></activity>
     </application>
 
 </manifest>

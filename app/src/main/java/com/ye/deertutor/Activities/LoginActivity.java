@@ -58,12 +58,13 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                         if(e==null){
                             Toast.makeText(LoginActivity.this,"登陆成功",
                                     Toast.LENGTH_LONG).show();
+                            finish();
                         }else{
                             e.printStackTrace();
                         }
                     }
                 });
-                finish();
+
 
                 break;
             case R.id.gotoregister:

@@ -4,6 +4,7 @@ package com.ye.deertutor.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ye.deertutor.Activities.LoginActivity;
+import com.ye.deertutor.Activities.ParentInfoActivity;
+import com.ye.deertutor.Activities.TeacherInfoActivity;
 import com.ye.deertutor.R;
 import com.ye.deertutor.models.DeerUser;
 
@@ -25,9 +28,9 @@ public class MineFragment extends Fragment implements View.OnClickListener{
 
 
     private LinearLayout toUserLayout;
-    private TextView userNameShowText;
+    public TextView userNameShowText;
     private RelativeLayout logoutLayout;
-    public DeerUser currentUser;
+    public DeerUser currentUser = BmobUser.getCurrentUser(DeerUser.class);
 
     public MineFragment() {
         // Required empty public constructor
@@ -53,9 +56,19 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.touser:
-                if((currentUser = BmobUser.getCurrentUser(DeerUser.class)) == null){
+                if((currentUser) == null){
                     Intent toLoginIntent = new Intent(getActivity(),LoginActivity.class);
                     startActivity(toLoginIntent);
+                }else {
+                    if(currentUser.getType().equals("teacher")){
+                        Intent toTeacherInfo = new Intent(getActivity(),
+                                TeacherInfoActivity.class);
+                        startActivity(toTeacherInfo);
+                    }else if(currentUser.getType().equals("parent")){
+                        Intent toParentInfo = new Intent(getActivity(),
+                                ParentInfoActivity.class);
+                        startActivity(toParentInfo);
+                    }
                 }
 
                 break;
@@ -64,6 +77,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
                 currentUser.logOut();
                 Toast.makeText(getActivity(),"您已退出当前账户",Toast.LENGTH_LONG).show();
                 userNameShowText.setText("登陆/注册");
+                currentUser = BmobUser.getCurrentUser(DeerUser.class);
         }
     }
 

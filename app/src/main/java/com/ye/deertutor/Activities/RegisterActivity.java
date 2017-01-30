@@ -18,7 +18,6 @@ import com.ye.deertutor.models.Teacher;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -32,6 +31,8 @@ public class RegisterActivity extends Activity{
     public RadioButton teacher;
     public RadioButton parent;
     public Button registerButton;
+
+    //public TextView userNameShowText;
 
     public String typeString;
 
@@ -51,7 +52,7 @@ public class RegisterActivity extends Activity{
 
         registerButton = (Button)findViewById(R.id.registerbutton);
 
-
+        //userNameShowText = (TextView)findViewById(R.id.usernameshowtext);
 
         typeRb.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -107,6 +108,7 @@ public class RegisterActivity extends Activity{
             public void done(List<DeerUser> list, BmobException e) {
                 if(e==null){
                     for(DeerUser deerUser2 : list){
+                        //userNameShowText.setText(deerUser2.getUsername());
                         if(deerUser2.getType().equals("teacher")){
                             addToTeacher(deerUser2);
                         }else if(deerUser2.getType().equals("parent")){
