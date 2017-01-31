@@ -14,6 +14,31 @@
     <TableRow>
         <TextView
             android:layout_height="wrap_content"
+            android:text="用户名"/>
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:id="@+id/parentusernameedit" />
+
+    </TableRow>
+
+
+    <TableRow>
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="头像"/>
+
+        <Button
+            android:text="点此上传头像"
+            android:layout_height="wrap_content"
+            android:id="@+id/parentheadiconedit" />
+
+    </TableRow>
+
+
+    <TableRow>
+        <TextView
+            android:layout_height="wrap_content"
             android:text="孩子的性别" />
 
         <EditText
