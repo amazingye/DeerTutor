@@ -5,6 +5,8 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +23,10 @@ import com.ye.deertutor.R;
 import com.ye.deertutor.models.DeerUser;
 import com.ye.deertutor.models.Parent;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,16 +47,12 @@ public class ParentModifyActivity extends Activity {
     public EditText addressEdit;
 
     public String parentUsername;
-    public File headIcon;
+    public File file;
     public BmobFile parentHeadIcon;
     public String childSex;
     public String childGrade;
     public String address;
 
-    /*public static final int TAKE_PHOTO = 1;
-    public static final int CROP_PHOTO = 2;*/
-
-    public Uri imageUri;
 
     public Button parentModifySaveButton;
 
@@ -64,7 +65,9 @@ public class ParentModifyActivity extends Activity {
         parentHeadiconEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseHeadicon();
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);  //打开媒体库，挑选图片
+                intent.setType("image/*");
+                startActivityForResult(intent,1);
             }
         });
 
@@ -72,6 +75,7 @@ public class ParentModifyActivity extends Activity {
         childSexEdit = (EditText) findViewById(R.id.childsexeedit);
         childGradeEdit = (EditText) findViewById(R.id.childgradeedit);
         addressEdit = (EditText) findViewById(R.id.addressedit);
+
 
         parentModifySaveButton = (Button) findViewById(R.id.parentmodifysave);
         parentModifySaveButton.setOnClickListener(new View.OnClickListener() {
@@ -90,11 +94,14 @@ public class ParentModifyActivity extends Activity {
 
         DeerUser currentUser = BmobUser.getCurrentUser(DeerUser.class);
         currentUser.setUsername(parentUsername);
+        currentUser.setHeadIcon(parentHeadIcon);
         currentUser.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    Log.i("bmob", "用户名更改成功");
+                    Log.i("bmob", "用户资料更改成功");
+                }else {
+                    e.printStackTrace();
                 }
             }
         });
@@ -122,7 +129,7 @@ public class ParentModifyActivity extends Activity {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    Log.i("bmob", "更新成功");
+                    Log.i("bmob", "家长信息更新成功");
                     Toast.makeText(ParentModifyActivity.this,
                             "修改资料成功", Toast.LENGTH_LONG).show();
                     finish();
@@ -134,72 +141,109 @@ public class ParentModifyActivity extends Activity {
     }
 
 
-    public void chooseHeadicon() {
-        headIcon = new File(Environment.getExternalStorageDirectory(),
-                "headicon.jpg");
-        try {
-            if (headIcon.exists()) {
-                headIcon.delete();
-            }
-            headIcon.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        imageUri = Uri.fromFile(headIcon);
-
-        /*Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("image*//*");
-        if (android.os.Build.VERSION.SDK_INT >=
-                android.os.Build.VERSION_CODES.KITKAT) {
-            startActivityForResult(intent,SELECT_PIC_KITKAT);
-        } else {
-            startActivityForResult(intent,IMAGE_REQUEST_CODE);
-        }*/
-
-        /*Intent intent = new Intent("android.intent.action.GET_CONTENT");
-        intent.setType("image*//*");
-        intent.putExtra("crop", true);
-        intent.putExtra("scale", true);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent,TAKE_PHOTO);*/
-
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        intent.putExtra("crop", true);
-        intent.putExtra("scale", true);
-        //intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent,2);
-
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 2) {
-            Uri uri = data.getData();
-            String path = getPath(this,uri);
-            Log.i("tag",path);
-            parentHeadIcon = new BmobFile(new File(path));
-            parentHeadIcon.uploadblock(new UploadFileListener() {
-                @Override
-                public void done(BmobException e) {
-                    if(e==null){
-                        //bmobFile.getFileUrl()--返回的上传文件的完整地址
-                        Log.i("bmob","上传文件成功:"+parentHeadIcon.getFileUrl());
-                    }else{
-                        Log.i("bmob","上传文件失败：" + e.getMessage());
-                    }
-                }
-
-                @Override
-                public void onProgress(Integer value) {
-                    Log.i("progress",value.toString());
-                }
-            });
+        if (requestCode == 1) {
+            upLoadHeadicon(data);
         }
 
     }
+
+    public void upLoadHeadicon(Intent data){
+        Uri uri = data.getData();
+        String path = getPath(this,uri);    //此处调用了适用于kitkat以上的获取path方法
+        getImage(path);
+
+        parentHeadIcon = new BmobFile(file);
+        parentHeadIcon.uploadblock(new UploadFileListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    Log.i("bmob","上传文件成功");
+                }else{
+                    Log.i("bmob","上传文件失败:" + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onProgress(Integer value) {
+                Log.i("progress",value.toString());
+            }
+        });
+    }
+
+
+
+
+    private void getImage(String srcPath) {
+
+
+        //以下程序段为根据选择的图片路径进行压缩前比例设置
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        //开始读入图片，此时把options.inJustDecodeBounds 设回true了
+        newOpts.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(srcPath,newOpts);//此时返回bm为空
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        //现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
+        float hh = 800f;//这里设置高度为800f
+        float ww = 480f;//这里设置宽度为480f
+        //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
+        int be = 1;//be=1表示不缩放
+        if (w > h && w > ww) {//如果宽度大的话根据宽度固定大小缩放
+            be = (int) (newOpts.outWidth / ww);
+        } else if (w < h && h > hh) {//如果高度高的话根据宽度固定大小缩放
+            be = (int) (newOpts.outHeight / hh);
+        }
+        if (be <= 0)
+            be = 1;
+        newOpts.inSampleSize = be;//设置缩放比例
+        //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
+        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        //compressImage(bitmap);  //压缩好比例大小后再进行质量压缩
+
+
+
+        //以下为bitmap压缩算法
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        int options = 100;
+        while ( baos.toByteArray().length / 1024>100) {
+            //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            baos.reset();//重置baos即清空baos
+            bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);
+            //这里压缩options%，把压缩后的数据存放到baos中
+            options -= 10;//每次都减少10
+        }
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+        //把压缩后的数据baos存放到ByteArrayInputStream中
+        Bitmap compressedBitmap = BitmapFactory.decodeStream(isBm, null, null);
+        //把ByteArrayInputStream数据生成图片
+        //saveImage(compressedBitmap);
+
+
+        //将压缩后的bitmap存储到根目录
+        file = new File(Environment.getExternalStorageDirectory(),"headicon.jpeg");
+
+        try {
+            if (file.exists()) {
+                file.delete();
+            }
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            compressedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
@@ -330,4 +374,3 @@ public class ParentModifyActivity extends Activity {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 }
-
