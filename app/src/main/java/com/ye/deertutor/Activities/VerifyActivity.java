@@ -1,9 +1,9 @@
+
 package com.ye.deertutor.Activities;
 
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ye.deertutor.R;
 import com.ye.deertutor.models.DeerUser;
@@ -36,110 +35,92 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
-import cn.bmob.v3.listener.UploadFileListener;
+import cn.bmob.v3.listener.UploadBatchListener;
+import cn.finalteam.galleryfinal.FunctionConfig;
+import cn.finalteam.galleryfinal.GalleryFinal;
+import cn.finalteam.galleryfinal.model.PhotoInfo;
 
-public class TeacherModifyActivity extends Activity {
-    public EditText teacherUsernameEdit;
-    public Button teacherHeadiconEdit;
-    public EditText availableGradeEdit;
-    public EditText availableSubjectEdit;
-    public EditText teacherDescribeEdit;
-    public EditText priceEdit;
+public class VerifyActivity extends Activity {
+    public String realName;
+    public String idCardNumber;
+    public String teacherSex;
+    public List<String> IDPics;
 
-    public File file;
+    EditText realNameEdit;
+    EditText idCardNumberEdit;
+    EditText teacherSexEdit;
+    Button chooseIdPic;
+    Button submitVerifyButton;
 
-    public String teacherUsername;
-    public String availableGrade;
-    public String availableSubject;
-    public String teacherDescribe;
-    public String price;
-    public BmobFile teacherHeadicon;
+    File file;
+    public BmobFile IDPic;
 
-    public Button teacherModifySaveButton;
+    public int REQUEST_CODE_GALLERY = 1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_modify);
+        setContentView(R.layout.activity_verify);
 
-        teacherUsernameEdit = (EditText)findViewById(R.id.teacherusernameedit);
-        availableGradeEdit = (EditText)findViewById(R.id.availablegradeedit);
-        availableSubjectEdit = (EditText)findViewById(R.id.availablesubjectedit);
-        teacherDescribeEdit = (EditText)findViewById(R.id.teacherdescribeedit);
-        priceEdit = (EditText)findViewById(R.id.priceedit);
-        teacherHeadiconEdit = (Button)findViewById(R.id.teacherheadiconedit);
-        teacherModifySaveButton = (Button)findViewById(R.id.teachermodifysave);
+        realNameEdit = (EditText)findViewById(R.id.teacherrealnameedit);
+        idCardNumberEdit = (EditText)findViewById(R.id.idnumberedit);
+        teacherSexEdit = (EditText)findViewById(R.id.teachersexedit);
 
-        teacherHeadiconEdit.setOnClickListener(new View.OnClickListener() {
+        chooseIdPic = (Button)findViewById(R.id.iduploadbutton);
+        chooseIdPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);  //打开媒体库，挑选图片
-                intent.setType("image/*");
-                startActivityForResult(intent,1);
+                FunctionConfig FCconfig = new FunctionConfig.Builder()
+                        .setMutiSelectMaxSize(2)
+                        .build();
+                GalleryFinal.openGalleryMuti(REQUEST_CODE_GALLERY,FCconfig,mCallback);
             }
         });
-        teacherModifySaveButton.setOnClickListener(new View.OnClickListener() {
+        submitVerifyButton = (Button)findViewById(R.id.submitverify);
+        submitVerifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveModify();
+                submitVerify();
             }
         });
-
     }
 
 
-    public void saveModify(){
-        teacherUsername = teacherUsernameEdit.getText().toString();
-        availableGrade = availableGradeEdit.getText().toString();
-        availableSubject = availableSubjectEdit.getText().toString();
-        teacherDescribe = teacherDescribeEdit.getText().toString();
-        price = priceEdit.getText().toString();
+
+    public void submitVerify(){
+        realName = realNameEdit.getText().toString();
+        idCardNumber = idCardNumberEdit.getText().toString();
+        teacherSex = teacherSexEdit.getText().toString();
 
         DeerUser currentUser = BmobUser.getCurrentUser(DeerUser.class);
-        currentUser.setUsername(teacherUsername);
-        currentUser.setHeadIcon(teacherHeadicon);
-        currentUser.update(new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if(e == null){
-                    Log.i("bmob","用户资料更新成功");
-                }else {
-                    e.printStackTrace();
-                }
-            }
-        });
         BmobQuery<Teacher> query = new BmobQuery<>();
         query.addWhereEqualTo("userId",currentUser);
         query.findObjects(new FindListener<Teacher>() {
             @Override
             public void done(List<Teacher> list, BmobException e) {
                 if(e == null){
-                    for(Teacher teacher2 : list){
-                        updateTeacher(teacher2);
+                    for(Teacher teacher : list){
+                        teacher.setIdCardNumber(idCardNumber);
+                        teacher.setRealName(realName);
+                        teacher.setSex(teacherSex);
+                        teacher.setIDPics(IDPics);
+                        teacher.setVerifyStatus("待审核");
+                        teacher.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if(e == null){
+                                    Log.i("submitverify","提交审核成功");
+                                    finish();
+                                }else {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                     }
                 }else {
-                    Log.i("bmob",e.getMessage()+""+e.getErrorCode());
-                }
-            }
-        });
-
-    }
-
-    public void updateTeacher(Teacher teacher){
-        teacher.setAvailableGrade(availableGrade);
-        teacher.setAvailableSubject(availableSubject);
-        teacher.setTeacherDescribe(teacherDescribe);
-        teacher.setPrice(price);
-        teacher.update(teacher.getObjectId(), new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if(e==null){
-                    Log.i("bmob","更新成功");
-                    Toast.makeText(TeacherModifyActivity.this,
-                            "修改资料成功",Toast.LENGTH_LONG).show();
-                    finish();
-                }else{
-                    Log.i("bmob","更新失败："+e.getMessage()+","+e.getErrorCode());
+                    Log.i("submitVerify",e.getMessage());
                 }
             }
         });
@@ -147,42 +128,59 @@ public class TeacherModifyActivity extends Activity {
 
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            upLoadHeadicon(data);
-        }
-
-    }
-
-    public void upLoadHeadicon(Intent data){
-        Uri uri = data.getData();
-        String path = getPath(this,uri);    //此处调用了适用于kitkat以上的获取path方法
-        getImage(path);
-
-        teacherHeadicon = new BmobFile(file);
-        teacherHeadicon.uploadblock(new UploadFileListener() {
-            @Override
-            public void done(BmobException e) {
-                if(e==null){
-                    Log.i("bmob","上传文件成功");
-                }else{
-                    Log.i("bmob","上传文件失败:" + e.getMessage());
+    public GalleryFinal.OnHanlderResultCallback mCallback =
+            new GalleryFinal.OnHanlderResultCallback() {
+                @Override
+                public void onHanlderSuccess(int reqeustCode, List<PhotoInfo> resultList) {
+                    String[] paths = new String[resultList.size()];
+                    int i = 0;
+                    for(PhotoInfo photoInfo : resultList){
+                        getImage(photoInfo.getPhotoPath());
+                        paths[i++] = getPath(VerifyActivity.this,Uri.fromFile(file));
+                        //paths[i++] = Uri.fromFile(file).toString();
+                        //paths[i++] = photoInfo.getPhotoPath();
+                    }
+                    uploadIDAction(paths);
                 }
+
+                @Override
+                public void onHanlderFailure(int requestCode, String errorMsg) {
+                    Log.i("onHanlderFailure",errorMsg);
+                }
+            };
+
+
+    public void uploadIDAction(String[] paths){
+
+        BmobFile.uploadBatch(paths, new UploadBatchListener() {
+            @Override
+            public void onSuccess(List<BmobFile> list, List<String> list1) {
+                for(String url : list1){
+                    Log.i("IDUrls",url);
+                }
+                IDPics = list1;
             }
 
             @Override
-            public void onProgress(Integer value) {
-                Log.i("progress",value.toString());
+            public void onProgress(int curIndex, int curPercent, int total,int totalPercent) {
+                Log.i("Progress",curIndex+" "+curPercent+" "+total+" "+totalPercent);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.d("upLoadBatchError",i+""+s);
             }
         });
+
     }
+
+
+
 
 
 
 
     private void getImage(String srcPath) {
-
 
         //以下程序段为根据选择的图片路径进行压缩前比例设置
         BitmapFactory.Options newOpts = new BitmapFactory.Options();
@@ -231,7 +229,8 @@ public class TeacherModifyActivity extends Activity {
 
 
         //将压缩后的bitmap存储到根目录
-        file = new File(Environment.getExternalStorageDirectory(),"headicon.jpeg");
+        file = new File(Environment.getExternalStorageDirectory(),
+                "IDPic"+(int)(Math.random()*100)+".jpeg");
 
         try {
             if (file.exists()) {
@@ -250,15 +249,7 @@ public class TeacherModifyActivity extends Activity {
     }
 
 
-    /**
-     * Get a file path from a Uri. This will get the the path for Storage Access
-     * Framework Documents, as well as the _data field for the MediaStore and
-     * other file-based ContentProviders.
-     *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @author paulburke
-     */
+
     public static String getPath(final Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;

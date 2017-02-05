@@ -126,6 +126,7 @@ public class RegisterActivity extends Activity{
     public void addToTeacher(DeerUser deerUser){
         Teacher teacher = new Teacher();
         teacher.setUserId(deerUser);
+        teacher.setVerifyStatus("未认证");
         teacher.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {

@@ -13,72 +13,60 @@
 
     <TableRow>
         <TextView
-            android:text="用户名"
+            android:text="真实姓名"
             android:layout_height="wrap_content"/>
 
         <EditText
-            android:id="@+id/teacherusernameedit"
+            android:id="@+id/teacherrealnameedit"
+            android:layout_height="wrap_content" />
+    </TableRow>
+
+
+    <TableRow>
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="身份证号" />
+
+        <EditText
+            android:id="@+id/idnumberedit"
+            android:layout_height="wrap_content" />
+    </TableRow>
+
+
+
+
+    <TableRow>
+        <TextView
+            android:text="性别"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/teachersexedit"
             android:layout_height="wrap_content" />
     </TableRow>
 
     <TableRow>
         <TextView
-            android:text="头像"
-            android:layout_height="wrap_content"/>
-
+            android:layout_height="wrap_content"
+            android:text="身份证正反面照"/>
         <Button
-            android:id="@+id/teacherheadiconedit"
-            android:layout_height="wrap_content"
-            android:text="点击上传头像"/>
+            android:id="@+id/iduploadbutton"
+            android:text="点击上传"/>
     </TableRow>
 
     <TableRow>
         <TextView
             android:layout_height="wrap_content"
-            android:text="可教授年级" />
-
-        <EditText
-            android:id="@+id/availablegradeedit"
-            android:layout_height="wrap_content" />
-    </TableRow>
-
-    <TableRow>
-        <TextView
-            android:layout_height="wrap_content"
-            android:text="可教授科目"/>
-
-        <EditText
-            android:id="@+id/availablesubjectedit"
-            android:layout_height="wrap_content" />
-
-    </TableRow>
-
-    <TableRow>
-        <TextView
-            android:layout_height="wrap_content"
-            android:text="自我描述"/>
-
-        <EditText
-            android:layout_height="wrap_content"
-            android:id="@+id/teacherdescribeedit" />
-
-    </TableRow>
-
-    <TableRow>
-        <TextView
-            android:text="意向薪资"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:id="@+id/priceedit"
-            android:layout_height="wrap_content"
-            android:text="执行小鹿家教薪资标准"/>
+            android:text="教师资格证照"/>
+        <Button
+            android:id="@+id/certiuploadbutton"
+            android:text="点击上传"/>
     </TableRow>
 
     <TableRow>
         <Button
-            android:id="@+id/teachermodifysave"
-            android:text="保存更改"
+            android:id="@+id/submitverify"
+            android:text="提交认证"
             android:layout_span="2"/>
     </TableRow>
 

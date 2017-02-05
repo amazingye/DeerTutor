@@ -24,6 +24,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent" />
                 <ImageView
+                    android:id="@+id/teacherheadicon"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent" />
             </FrameLayout>
@@ -232,6 +233,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/verifystatusll"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dip"

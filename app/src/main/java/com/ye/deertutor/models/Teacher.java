@@ -1,6 +1,9 @@
 package com.ye.deertutor.models;
 
+import java.util.List;
+
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobFile;
 
 
 public class Teacher extends BmobObject {
@@ -15,6 +18,7 @@ public class Teacher extends BmobObject {
     private String availableGrade;
     private String availableSubject;
     private String verifyStatus;
+    private List<String> IDPics;
 
 
     public DeerUser getUserId(){
@@ -95,5 +99,13 @@ public class Teacher extends BmobObject {
 
     public void setAvailableSubject(String availableSubject){
         this.availableSubject = availableSubject;
+    }
+
+    public List<String> getIDPics(){
+        return IDPics;
+    }
+
+    public void setIDPics(List<String> IDPics){
+        this.IDPics = IDPics;
     }
 }
