@@ -12,6 +12,14 @@
         android:text="这是首页"/>
 
 
+    <ListView
+        android:id="@+id/homepagelistview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+
 
 
 

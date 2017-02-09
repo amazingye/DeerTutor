@@ -12,7 +12,7 @@ import com.ye.deertutor.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CourseFragment extends Fragment {
+public class CourseFragment extends android.app.Fragment {
 
 
     public CourseFragment() {

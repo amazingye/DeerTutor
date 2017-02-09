@@ -24,7 +24,7 @@ import cn.bmob.v3.BmobUser;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MineFragment extends Fragment implements View.OnClickListener{
+public class MineFragment extends android.app.Fragment implements View.OnClickListener{
 
 
     private LinearLayout toUserLayout;

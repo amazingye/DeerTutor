@@ -1,24 +1,31 @@
 package com.ye.deertutor.Activities;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.yalantis.euclid.library.EuclidActivity;
+import com.yalantis.euclid.library.EuclidListAdapter;
 import com.ye.deertutor.Fragments.CourseFragment;
 import com.ye.deertutor.Fragments.HomepageFragment;
 import com.ye.deertutor.Fragments.MineFragment;
 import com.ye.deertutor.R;
-import com.ye.deertutor.models.DeerUser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import cn.bmob.v3.Bmob;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener{
+public class MainActivity extends EuclidActivity implements View.OnClickListener{
 
     private TextView titleText;
 
@@ -45,16 +52,37 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
-        fragmentManager = getSupportFragmentManager();
+        fragmentManager = getFragmentManager();
         initView();
         setChoiceItem(0);
         Bmob.initialize(this, "cfe590c37becfa3b8042d7cadefaa0be");
     }
 
+    @Override                 //此方法已在HomepageFragment中重写
+    protected BaseAdapter getAdapter() {
+        //Map<String, Object> profileMap;
+        List<Map<String, Object>> profilesList = new ArrayList<>();
+
+        /*int[] avatars = {
+                R.mipmap.anastasia};
+        String[] names = {"name"};
+
+        for (int i = 0; i < avatars.length; i++) {
+            profileMap = new HashMap<>();
+            profileMap.put(EuclidListAdapter.KEY_AVATAR, avatars[i]);
+            profileMap.put(EuclidListAdapter.KEY_NAME, names[i]);
+            profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_SHORT, getString(R.string.lorem_ipsum_short));
+            profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_FULL, getString(R.string.lorem_ipsum_long));
+            profilesList.add(profileMap);
+        }*/
+
+        return new EuclidListAdapter(this, R.layout.list_item, profilesList);
+    }
+
 
     private void initView(){
-        titleText = (TextView)findViewById(R.id.title_text_tv);
-        titleText.setText("首 页");
+/*        titleText = (TextView)findViewById(R.id.title_text_tv);
+        titleText.setText("首 页");*/
 
 
         //初始化底部导航栏控件
@@ -70,6 +98,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         homePageLayout.setOnClickListener(MainActivity.this);
         courseLayout.setOnClickListener(MainActivity.this);
         mineLayout.setOnClickListener(MainActivity.this);
+
+
     }
 
 
@@ -95,12 +125,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     /**
      * 设置点击选项卡事件的处理*/
     private void setChoiceItem(int index){
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        android.app.FragmentTransaction fragmentTransaction
+                = fragmentManager.beginTransaction();
         clearChoice();  // 清空, 重置选项, 隐藏所有Fragment
         hideFragments(fragmentTransaction);
         switch (index){
             case 0:
-                titleText.setText("首 页");
+                //titleText.setText("首 页");
                 homepageText.setTextColor(dark);
                 homePageLayout.setBackgroundColor(gray);
                 if(homepageFragment == null){
@@ -111,7 +142,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 break;
             case 1:
-                titleText.setText("课 程");
+                //titleText.setText("课 程");
                 courseText.setTextColor(dark);
                 courseLayout.setBackgroundColor(gray);
                 if(courseFragment == null){
@@ -122,12 +153,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 break;
             case 2:
-                titleText.setText("我 的");
+                //titleText.setText("我 的");
                 mineText.setTextColor(dark);
                 mineLayout.setBackgroundColor(gray);
                 if(mineFragment == null){
                     mineFragment = new MineFragment();
                     fragmentTransaction.add(R.id.content,mineFragment);
+
                 }else {
                     fragmentTransaction.show(mineFragment);
                 }

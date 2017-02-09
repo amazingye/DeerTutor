@@ -1,15 +1,13 @@
-package com.ye.deertutor.Fragments;
+package com.yalantis.euclid.library;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -24,31 +22,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.appearance.ViewAnimator;
 import com.nhaarman.listviewanimations.appearance.simple.SwingLeftInAnimationAdapter;
 import com.squareup.picasso.Picasso;
-import com.yalantis.euclid.library.EuclidListAdapter;
-import com.yalantis.euclid.library.EuclidState;
-import com.ye.deertutor.R;
-import com.ye.deertutor.models.Teacher;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class HomepageFragment extends android.app.Fragment {
+
+
+public abstract class EuclidActivity extends Activity {
 
     private static final int REVEAL_ANIMATION_DURATION = 1000;
     private static final int MAX_DELAY_SHOW_DETAILS_ANIMATION = 500;
@@ -83,77 +71,26 @@ public class HomepageFragment extends android.app.Fragment {
     private AnimatorSet mCloseProfileAnimatorSet;
     private Animation mProfileButtonShowAnimation;
 
-
-
-    public Map<String, Object> profileMap;
-    public List<Map<String, Object>> profilesList = new ArrayList<>();
-
-    protected BaseAdapter getAdapter(){
-        /*Map<String, Object> profileMap;
-        List<Map<String, Object>> profilesList = new ArrayList<>();*/
-
-        BmobQuery<Teacher> query1 = new BmobQuery<Teacher>();
-        query1.addWhereEqualTo("sex","M");
-        BmobQuery<Teacher> query2 = new BmobQuery<Teacher>();
-        query2.addWhereEqualTo("sex","F");
-        List<BmobQuery<Teacher>> queries = new ArrayList<BmobQuery<Teacher>>();
-        queries.add(query1);
-        queries.add(query2);
-        BmobQuery<Teacher> mainQuery = new BmobQuery<Teacher>();
-        mainQuery.or(queries);
-        mainQuery.findObjects(new FindListener<Teacher>() {
-            @Override
-            public void done(List<Teacher> list, BmobException e) {
-                if(e == null){
-
-
-                    for(Teacher teacher : list){
-                        profileMap = new HashMap<>();
-                        profileMap.put(EuclidListAdapter.KEY_AVATAR, R.mipmap.anastasia);
-                        profileMap.put(EuclidListAdapter.KEY_NAME, teacher.getRealName());
-                        profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_SHORT, teacher.getTeacherDescribe());
-                        profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_FULL, getString(R.string.lorem_ipsum_long));
-                        profilesList.add(profileMap);
-                    }
-                }else {
-                    Log.i("queryerror",e.getMessage());
-                }
-            }
-        });
-
-
-
-        return new EuclidListAdapter(getActivity(), R.layout.list_item, profilesList);
-    }
-
-
-
-
-
-    public HomepageFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_euclid,null);
-        mWrapper = (RelativeLayout) view.findViewById(R.id.wrapper);
-        mListView = (ListView) view.findViewById(R.id.list_view);
-        mToolbar = (FrameLayout) view.findViewById(R.id.toolbar_list);
-        mToolbarProfile = (RelativeLayout) view.findViewById(R.id.toolbar_profile);
-        mProfileDetails = (LinearLayout) view.findViewById(R.id.wrapper_profile_details);
-        mTextViewProfileName = (TextView) view.findViewById(R.id.text_view_profile_name);
-        mTextViewProfileDescription = (TextView) view.findViewById(R.id.text_view_profile_description);
-        mButtonProfile = view.findViewById(R.id.button_profile);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_euclid);
+
+        mWrapper = (RelativeLayout) findViewById(R.id.wrapper);
+        mListView = (ListView) findViewById(R.id.list_view);
+        mToolbar = (FrameLayout) findViewById(R.id.toolbar_list);
+        mToolbarProfile = (RelativeLayout) findViewById(R.id.toolbar_profile);
+        mProfileDetails = (LinearLayout) findViewById(R.id.wrapper_profile_details);
+        mTextViewProfileName = (TextView) findViewById(R.id.text_view_profile_name);
+        mTextViewProfileDescription = (TextView) findViewById(R.id.text_view_profile_description);
+        mButtonProfile = findViewById(R.id.button_profile);
         mButtonProfile.post(new Runnable() {
             @Override
             public void run() {
                 mInitialProfileButtonX = mButtonProfile.getX();
             }
         });
-        view.findViewById(R.id.toolbar_profile_back).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.toolbar_profile_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 animateCloseProfileDetails();
@@ -165,10 +102,7 @@ public class HomepageFragment extends android.app.Fragment {
         sOverlayShape = buildAvatarCircleOverlay();
 
         initList();
-        return view;
-
     }
-
 
     private void initList() {
         mListViewAnimationAdapter = new SwingLeftInAnimationAdapter(getAdapter());
@@ -188,28 +122,13 @@ public class HomepageFragment extends android.app.Fragment {
         });
     }
 
-
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        mButtonProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Oh hi!", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-
-        /**
-         * This method counts delay before profile toolbar and profile details start their transition
-         * animations, depending on clicked list item on-screen position.
-         *
-         * @param item - data from adapter, that will be set into overlay view.
-         * @param view - clicked view.
-         */
+    /**
+     * This method counts delay before profile toolbar and profile details start their transition
+     * animations, depending on clicked list item on-screen position.
+     *
+     * @param item - data from adapter, that will be set into overlay view.
+     * @param view - clicked view.
+     */
     private void showProfileDetails(Map<String, Object> item, final View view) {
         mListView.setEnabled(false);
 
@@ -229,18 +148,18 @@ public class HomepageFragment extends android.app.Fragment {
      */
     private void addOverlayListItem(Map<String, Object> item, View view) {
         if (mOverlayListItemView == null) {
-            mOverlayListItemView = getActivity().getLayoutInflater().inflate(com.yalantis.euclid.library.R.layout.overlay_list_item, mWrapper, false);
+            mOverlayListItemView = getLayoutInflater().inflate(R.layout.overlay_list_item, mWrapper, false);
         } else {
             mWrapper.removeView(mOverlayListItemView);
         }
 
         mOverlayListItemView.findViewById(R.id.view_avatar_overlay).setBackground(sOverlayShape);
 
-        Picasso.with(getActivity()).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
+        Picasso.with(EuclidActivity.this).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
                 .resize(sScreenWidth, sProfileImageHeight).centerCrop()
                 .placeholder(R.color.blue)
                 .into((ImageView) mOverlayListItemView.findViewById(R.id.image_view_reveal_avatar));
-        Picasso.with(getActivity()).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
+        Picasso.with(EuclidActivity.this).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
                 .resize(sScreenWidth, sProfileImageHeight).centerCrop()
                 .placeholder(R.color.blue)
                 .into((ImageView) mOverlayListItemView.findViewById(R.id.image_view_avatar));
@@ -290,7 +209,7 @@ public class HomepageFragment extends android.app.Fragment {
      * @return - animator object that starts circle reveal animation.
      */
     private SupportAnimator getAvatarRevealAnimator() {
-        final LinearLayout mWrapperListItemReveal = (LinearLayout) mOverlayListItemView.findViewById(com.yalantis.euclid.library.R.id.wrapper_list_item_reveal);
+        final LinearLayout mWrapperListItemReveal = (LinearLayout) mOverlayListItemView.findViewById(R.id.wrapper_list_item_reveal);
 
         int finalRadius = Math.max(mOverlayListItemView.getWidth(), mOverlayListItemView.getHeight());
 
@@ -380,7 +299,7 @@ public class HomepageFragment extends android.app.Fragment {
      */
     private void createOpenProfileButtonAnimation() {
         if (mProfileButtonShowAnimation == null) {
-            mProfileButtonShowAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.profile_button_scale);
+            mProfileButtonShowAnimation = AnimationUtils.loadAnimation(this, R.anim.profile_button_scale);
             mProfileButtonShowAnimation.setDuration(getAnimationDurationShowProfileButton());
             mProfileButtonShowAnimation.setInterpolator(new AccelerateInterpolator());
             mProfileButtonShowAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -557,10 +476,26 @@ public class HomepageFragment extends android.app.Fragment {
         return Math.round((float) dp * getResources().getDisplayMetrics().density);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getState() == EuclidState.Opened) {
+            animateCloseProfileDetails();
+        } else if (getState() == EuclidState.Closed) {
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * To use EuclidActivity class, at least this method must be implemented, with your own data.
+     *
+     * @return - adapter with data. Check {@link com.yalantis.euclid.library.EuclidListAdapter}
+     */
+    protected abstract BaseAdapter getAdapter();
+
     /**
      * Returns current profile details state.
      *
-     * @return - {@link EuclidState}
+     * @return - {@link com.yalantis.euclid.library.EuclidState}
      */
     public EuclidState getState() {
         return mState;

@@ -126,6 +126,7 @@ public class RegisterActivity extends Activity{
     public void addToTeacher(DeerUser deerUser){
         Teacher teacher = new Teacher();
         teacher.setUserId(deerUser);
+        teacher.setTeacherDescribe("这位老师很神秘噢");
         teacher.setVerifyStatus("未认证");
         teacher.save(new SaveListener<String>() {
             @Override

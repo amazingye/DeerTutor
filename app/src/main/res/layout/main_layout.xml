@@ -4,9 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include
+    <!--<include
         android:id="@+id/title"
-        layout="@layout/title_layout"/>
+        layout="@layout/title_layout"/>-->
 
     <FrameLayout
         android:id="@+id/content"
