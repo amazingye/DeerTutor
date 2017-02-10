@@ -1,6 +1,7 @@
 package com.yalantis.euclid.library;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class EuclidListAdapter extends ArrayAdapter<Map<String, Object>> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Picasso.with(getContext()).load((Integer) mData.get(position).get(KEY_AVATAR))
+        Picasso.with(getContext()).load((Uri) mData.get(position).get(KEY_AVATAR))
                 .resize(EuclidActivity.sScreenWidth, EuclidActivity.sProfileImageHeight).centerCrop()
                 .placeholder(R.color.blue)
                 .into(viewHolder.mListItemAvatar);

@@ -3,10 +3,16 @@ package com.ye.deertutor.Fragments;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +38,9 @@ import com.squareup.picasso.Picasso;
 import com.yalantis.euclid.library.EuclidListAdapter;
 import com.yalantis.euclid.library.EuclidState;
 import com.ye.deertutor.R;
+import com.ye.deertutor.models.DeerUser;
 import com.ye.deertutor.models.Teacher;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +48,10 @@ import java.util.List;
 import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
@@ -87,10 +97,19 @@ public class HomepageFragment extends android.app.Fragment {
 
     public Map<String, Object> profileMap;
     public List<Map<String, Object>> profilesList = new ArrayList<>();
+    public Uri headiconUri;
+
+
 
     protected BaseAdapter getAdapter(){
-        /*Map<String, Object> profileMap;
-        List<Map<String, Object>> profilesList = new ArrayList<>();*/
+
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads().detectDiskWrites().detectNetwork()
+                .penaltyLog().build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
+                .penaltyLog().penaltyDeath().build());
+
 
         BmobQuery<Teacher> query1 = new BmobQuery<Teacher>();
         query1.addWhereEqualTo("sex","M");
@@ -106,14 +125,23 @@ public class HomepageFragment extends android.app.Fragment {
             public void done(List<Teacher> list, BmobException e) {
                 if(e == null){
 
+                    for(final Teacher teacher : list){
 
-                    for(Teacher teacher : list){
-                        profileMap = new HashMap<>();
-                        profileMap.put(EuclidListAdapter.KEY_AVATAR, R.mipmap.anastasia);
-                        profileMap.put(EuclidListAdapter.KEY_NAME, teacher.getRealName());
-                        profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_SHORT, teacher.getTeacherDescribe());
-                        profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_FULL, getString(R.string.lorem_ipsum_long));
-                        profilesList.add(profileMap);
+                        BmobQuery<DeerUser> query = new BmobQuery<DeerUser>();
+                        query.getObject(teacher.getUserId().getObjectId(), new QueryListener<DeerUser>() {
+                            @Override
+                            public void done(DeerUser deerUser, BmobException e) {
+                                profileMap = new HashMap<>();
+                                headiconUri = Uri.parse(deerUser.getHeadIcon().getUrl());
+                                profileMap.put(EuclidListAdapter.KEY_AVATAR,headiconUri);
+                                profileMap.put(EuclidListAdapter.KEY_NAME, teacher.getRealName());
+                                profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_SHORT, teacher.getTeacherDescribe());
+                                profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_FULL, getString(R.string.lorem_ipsum_long));
+                                profilesList.add(profileMap);
+                            }
+                        });
+
+
                     }
                 }else {
                     Log.i("queryerror",e.getMessage());
@@ -123,8 +151,10 @@ public class HomepageFragment extends android.app.Fragment {
 
 
 
-        return new EuclidListAdapter(getActivity(), R.layout.list_item, profilesList);
+        return new EuclidListAdapter(getActivity(), R.layout.list_item,profilesList );
     }
+
+
 
 
 
@@ -184,6 +214,7 @@ public class HomepageFragment extends android.app.Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mState = EuclidState.Opening;
                 showProfileDetails((Map<String, Object>) parent.getItemAtPosition(position), view);
+
             }
         });
     }
@@ -236,11 +267,11 @@ public class HomepageFragment extends android.app.Fragment {
 
         mOverlayListItemView.findViewById(R.id.view_avatar_overlay).setBackground(sOverlayShape);
 
-        Picasso.with(getActivity()).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
+        Picasso.with(getActivity()).load((Uri) item.get(EuclidListAdapter.KEY_AVATAR))
                 .resize(sScreenWidth, sProfileImageHeight).centerCrop()
                 .placeholder(R.color.blue)
                 .into((ImageView) mOverlayListItemView.findViewById(R.id.image_view_reveal_avatar));
-        Picasso.with(getActivity()).load((Integer) item.get(EuclidListAdapter.KEY_AVATAR))
+        Picasso.with(getActivity()).load((Uri) item.get(EuclidListAdapter.KEY_AVATAR))
                 .resize(sScreenWidth, sProfileImageHeight).centerCrop()
                 .placeholder(R.color.blue)
                 .into((ImageView) mOverlayListItemView.findViewById(R.id.image_view_avatar));
