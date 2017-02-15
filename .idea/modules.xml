@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/DeerTutor.iml" filepath="$PROJECT_DIR$/DeerTutor.iml" />
       <module fileurl="file://$PROJECT_DIR$/EuclidLibrary/EuclidLibrary.iml" filepath="$PROJECT_DIR$/EuclidLibrary/EuclidLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/PTRLibrary/PTRLibrary.iml" filepath="$PROJECT_DIR$/PTRLibrary/PTRLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SADlibrary/SADlibrary.iml" filepath="$PROJECT_DIR$/SADlibrary/SADlibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

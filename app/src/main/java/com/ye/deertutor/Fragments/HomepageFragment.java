@@ -18,7 +18,6 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
@@ -52,6 +51,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
@@ -238,25 +238,41 @@ public class HomepageFragment extends android.app.Fragment{
                 mButtonProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DeerUser currentUser = BmobUser.getCurrentUser(DeerUser.class);
+                        final DeerUser currentUser = BmobUser.getCurrentUser(DeerUser.class);
                         if(currentUser.getType().equals("parent")){
                             currentUser.setAppointtedTeacherId(
                                     profilesList.get(position).get("teacherId").toString());
-                            currentUser.update(new UpdateListener() {
-                                @Override
-                                public void done(BmobException e) {
-                                    if(e == null){
-                                        Toast.makeText(getActivity(),"预约成功！",Toast.LENGTH_LONG).show();
-                                    }else {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("确定预约吗?")
+                                    .setContentText("我们将会与该教师沟通\n预约成功后便及时通知您")
+                                    .setConfirmText("是的，我要预约")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            currentUser.update(new UpdateListener() {
+                                                @Override
+                                                public void done(BmobException e) {
+                                                    if(e == null){
+                                                        new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+                                                                .setTitleText("提交预约成功!")
+                                                                .setContentText("您可在课程中查看预约状态")
+                                                                .show();
+                                                    }else {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                            sDialog.dismissWithAnimation();
+                                        }
+                                    })
+                                    .show();
+
 
                         }else {
                             Toast.makeText(getActivity(),"您又不是家长，预约个什么鬼。",
                                     Toast.LENGTH_LONG).show();
                         }
+
                     }
                 });
             }

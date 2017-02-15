@@ -1,2 +1,2 @@
-include ':app', ':EuclidLibrary'
+include ':app', ':EuclidLibrary', 'SADlibrary'
 include ':PTRLibrary'
