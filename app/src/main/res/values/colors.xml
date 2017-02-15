@@ -192,8 +192,8 @@
     <!--暗灰色 -->
     <color name="brown">#A52A2A</color>
     <!--褐色 -->
-    <color name="sienna">#A0522D</color>
-    <!--赭色 -->
+    <!--<color name="sienna">#A0522D</color>
+    &lt;!&ndash;赭色 &ndash;&gt;-->
     <color name="darkorchid">#9932CC</color>
     <!--暗紫色 -->
     <color name="palegreen">#98FB98</color>
@@ -322,4 +322,8 @@
     <!--海军色 -->
     <color name="black">#000000</color>
     <!--黑色 -->
+
+    <color name="saffron">#F4B63E</color>
+    <color name="eggplant">#663D4E</color>
+    <color name="sienna">#EB6460</color>
 </resources>

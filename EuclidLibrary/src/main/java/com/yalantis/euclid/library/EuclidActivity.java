@@ -82,7 +82,7 @@ public abstract class EuclidActivity extends Activity {
         mToolbarProfile = (RelativeLayout) findViewById(R.id.toolbar_profile);
         mProfileDetails = (LinearLayout) findViewById(R.id.wrapper_profile_details);
         mTextViewProfileName = (TextView) findViewById(R.id.text_view_profile_name);
-        mTextViewProfileDescription = (TextView) findViewById(R.id.text_view_profile_description);
+//        mTextViewProfileDescription = (TextView) findViewById(R.id.text_view_profile_description);
         mButtonProfile = findViewById(R.id.button_profile);
         mButtonProfile.post(new Runnable() {
             @Override

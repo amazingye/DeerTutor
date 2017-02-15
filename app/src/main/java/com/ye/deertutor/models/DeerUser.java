@@ -9,6 +9,7 @@ public class DeerUser extends BmobUser{
 
     private BmobFile headIcon;
     private String type;
+    private String appointtedTeacherId;
 
 
     public BmobFile getHeadIcon(){
@@ -19,6 +20,10 @@ public class DeerUser extends BmobUser{
         return type;
     }
 
+    public String getAppointtedTeacherId(){
+        return appointtedTeacherId;
+    }
+
 
     public void setHeadIcon(BmobFile headIcon){
         this.headIcon = headIcon;
@@ -27,4 +32,9 @@ public class DeerUser extends BmobUser{
     public void setType(String type){
         this.type = type;
     }
+
+    public void setAppointtedTeacherId(String appointtedTeacherId){
+        this.appointtedTeacherId = appointtedTeacherId;
+    }
+
 }

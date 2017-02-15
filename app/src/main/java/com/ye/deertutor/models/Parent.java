@@ -13,6 +13,7 @@ public class Parent extends BmobObject {
     private String grade;
     private String address;
 
+
     public DeerUser getUserId(){
         return userId;
     }
@@ -52,4 +53,6 @@ public class Parent extends BmobObject {
     public void setAddress(String address){
         this.address = address;
     }
+
+
 }

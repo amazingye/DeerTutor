@@ -53,6 +53,7 @@ dependencies {
     //Xutils
     compile 'org.xutils:xutils:3.3.40'
     compile files('libs/universal-image-loader-1.9.5.jar')
-
     compile project(path: ':EuclidLibrary')
+    compile 'com.android.support:design:+'
+    compile project(path: ':PTRLibrary')
 }

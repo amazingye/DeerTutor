@@ -21,7 +21,16 @@
 
     </FrameLayout>
 
+    <!--<Button
+        android:id="@+id/nextpagebutton"
+        android:text="next page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>-->
+
+
     <ListView
+
         android:id="@+id/list_view"
         android:divider="@drawable/list_divider"
         android:layout_below="@+id/toolbar_list"
@@ -29,6 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/list_item" />
+
+
 
     <RelativeLayout
         android:id="@+id/toolbar_profile"
@@ -98,15 +109,65 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp">
 
-            <TextView
+            <!--<TextView
                 android:id="@+id/text_view_profile_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
                 tools:text="@string/lorem_ipsum_long"
                 android:fontFamily="sans-serif"
-                android:textSize="18sp" />
+                android:textSize="18sp" />-->
 
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TableRow>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="性别:"/>
+                    <TextView
+                        android:id="@+id/showsex"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="价格:"/>
+                    <TextView
+                        android:id="@+id/showprice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="可教授年级:"/>
+                    <TextView
+                        android:id="@+id/showavaigrade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="可教授科目:"/>
+                    <TextView
+                        android:id="@+id/showavaisubj"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+
+
+            </TableLayout>
         </ScrollView>
 
     </LinearLayout>

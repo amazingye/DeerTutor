@@ -3,15 +3,11 @@ package com.ye.deertutor.Fragments;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,6 +18,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
@@ -32,15 +29,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.nhaarman.listviewanimations.appearance.ViewAnimator;
 import com.nhaarman.listviewanimations.appearance.simple.SwingLeftInAnimationAdapter;
 import com.squareup.picasso.Picasso;
 import com.yalantis.euclid.library.EuclidListAdapter;
 import com.yalantis.euclid.library.EuclidState;
+import com.ye.deertutor.GetDataTask;
 import com.ye.deertutor.R;
 import com.ye.deertutor.models.DeerUser;
 import com.ye.deertutor.models.Teacher;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,13 +51,14 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.UpdateListener;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomepageFragment extends android.app.Fragment {
+public class HomepageFragment extends android.app.Fragment{
 
     private static final int REVEAL_ANIMATION_DURATION = 1000;
     private static final int MAX_DELAY_SHOW_DETAILS_ANIMATION = 500;
@@ -75,6 +75,11 @@ public class HomepageFragment extends android.app.Fragment {
     protected LinearLayout mProfileDetails;
     protected TextView mTextViewProfileName;
     protected TextView mTextViewProfileDescription;
+
+    protected TextView mTeacherSexText;
+    protected TextView mTeacherAvaiGradeText;
+    protected TextView mTeacherAvaiSubjText;
+    protected TextView mTeacherPriceText;
     protected View mButtonProfile;
 
     public static ShapeDrawable sOverlayShape;
@@ -100,6 +105,10 @@ public class HomepageFragment extends android.app.Fragment {
     public Uri headiconUri;
 
 
+    //一个可以下拉刷新的listView对象
+    public PullToRefreshListView mPullRefreshListView;
+    //普通的listview对象
+    //public ListView actualListView;
 
     protected BaseAdapter getAdapter(){
 
@@ -120,6 +129,7 @@ public class HomepageFragment extends android.app.Fragment {
         queries.add(query2);
         BmobQuery<Teacher> mainQuery = new BmobQuery<Teacher>();
         mainQuery.or(queries);
+        mainQuery.order("-createdAt");
         mainQuery.findObjects(new FindListener<Teacher>() {
             @Override
             public void done(List<Teacher> list, BmobException e) {
@@ -137,6 +147,11 @@ public class HomepageFragment extends android.app.Fragment {
                                 profileMap.put(EuclidListAdapter.KEY_NAME, teacher.getRealName());
                                 profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_SHORT, teacher.getTeacherDescribe());
                                 profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_FULL, getString(R.string.lorem_ipsum_long));
+                                profileMap.put("teacherId",teacher.getObjectId());
+                                profileMap.put("teacherSex",teacher.getSex());
+                                profileMap.put("avaiGrade",teacher.getAvailableGrade());
+                                profileMap.put("avaiSubj",teacher.getAvailableSubject());
+                                profileMap.put("price",teacher.getPrice());
                                 profilesList.add(profileMap);
                             }
                         });
@@ -148,8 +163,6 @@ public class HomepageFragment extends android.app.Fragment {
                 }
             }
         });
-
-
 
         return new EuclidListAdapter(getActivity(), R.layout.list_item,profilesList );
     }
@@ -171,11 +184,15 @@ public class HomepageFragment extends android.app.Fragment {
         View view = inflater.inflate(R.layout.activity_euclid,null);
         mWrapper = (RelativeLayout) view.findViewById(R.id.wrapper);
         mListView = (ListView) view.findViewById(R.id.list_view);
+        //mListView = mPullRefreshListView.getRefreshableView();     //caution
         mToolbar = (FrameLayout) view.findViewById(R.id.toolbar_list);
         mToolbarProfile = (RelativeLayout) view.findViewById(R.id.toolbar_profile);
         mProfileDetails = (LinearLayout) view.findViewById(R.id.wrapper_profile_details);
         mTextViewProfileName = (TextView) view.findViewById(R.id.text_view_profile_name);
-        mTextViewProfileDescription = (TextView) view.findViewById(R.id.text_view_profile_description);
+        mTeacherSexText = (TextView)view.findViewById(R.id.showsex);
+        mTeacherAvaiGradeText = (TextView)view.findViewById(R.id.showavaigrade);
+        mTeacherAvaiSubjText = (TextView)view.findViewById(R.id.showavaisubj);
+        mTeacherPriceText = (TextView)view.findViewById(R.id.showprice);
         mButtonProfile = view.findViewById(R.id.button_profile);
         mButtonProfile.post(new Runnable() {
             @Override
@@ -194,13 +211,17 @@ public class HomepageFragment extends android.app.Fragment {
         sProfileImageHeight = getResources().getDimensionPixelSize(R.dimen.height_profile_image);
         sOverlayShape = buildAvatarCircleOverlay();
 
+
         initList();
+        //initView(view);
+
         return view;
 
     }
 
 
     private void initList() {
+
         mListViewAnimationAdapter = new SwingLeftInAnimationAdapter(getAdapter());
         mListViewAnimationAdapter.setAbsListView(mListView);
         mListViewAnimator = mListViewAnimationAdapter.getViewAnimator();
@@ -211,10 +232,33 @@ public class HomepageFragment extends android.app.Fragment {
         mListView.setAdapter(mListViewAnimationAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 mState = EuclidState.Opening;
                 showProfileDetails((Map<String, Object>) parent.getItemAtPosition(position), view);
+                mButtonProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DeerUser currentUser = BmobUser.getCurrentUser(DeerUser.class);
+                        if(currentUser.getType().equals("parent")){
+                            currentUser.setAppointtedTeacherId(
+                                    profilesList.get(position).get("teacherId").toString());
+                            currentUser.update(new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if(e == null){
+                                        Toast.makeText(getActivity(),"预约成功！",Toast.LENGTH_LONG).show();
+                                    }else {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
 
+                        }else {
+                            Toast.makeText(getActivity(),"您又不是家长，预约个什么鬼。",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
     }
@@ -224,13 +268,60 @@ public class HomepageFragment extends android.app.Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        mButtonProfile.setOnClickListener(new View.OnClickListener() {
+
+    }
+
+
+    private void initView(View view) {
+        initPTRListView(view);
+        //initListView();
+    }
+
+    /**
+     * 设置下拉刷新的listview的动作
+     */
+    private void initPTRListView(View view) {
+        //mPullRefreshListView = (PullToRefreshListView)getView().findViewById(R.id.pull_refresh_list);
+        mPullRefreshListView = new PullToRefreshListView(view.getContext());
+        //设置拉动监听器
+        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+
             @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Oh hi!", Toast.LENGTH_SHORT).show();
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+
+                // 开始执行异步任务，传入适配器来进行数据改变
+                new GetDataTask(mPullRefreshListView,
+                        /*mAdapter*/mListViewAnimationAdapter,/*mListItems*/profilesList).execute();
             }
         });
+
+        // 添加滑动到底部的监听器
+        mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+
+            @Override
+            public void onLastItemVisible() {
+                Toast.makeText(getActivity(), "已经到底了", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //mPullRefreshListView.isScrollingWhileRefreshingEnabled();//看刷新时是否允许滑动
+        //在刷新时允许继续滑动
+        //mPullRefreshListView.setScrollingWhileRefreshingEnabled(true);
+        //mPullRefreshListView.getMode();//得到模式
+        //上下都可以刷新的模式。这里有两个选择：Mode.PULL_FROM_START，Mode.BOTH，PULL_FROM_END
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+
+
     }
+
+    /**
+     * 设置listview的适配器
+     */
+    private void initListView() {
+        //通过getRefreshableView()来得到一个listview对象
+
+}
+
 
 
 
@@ -294,7 +385,11 @@ public class HomepageFragment extends android.app.Fragment {
      */
     private void setProfileDetailsInfo(Map<String, Object> item) {
         mTextViewProfileName.setText((String) item.get(EuclidListAdapter.KEY_NAME));
-        mTextViewProfileDescription.setText((String) item.get(EuclidListAdapter.KEY_DESCRIPTION_FULL));
+//        mTextViewProfileDescription.setText((String) item.get(EuclidListAdapter.KEY_DESCRIPTION_FULL));
+        mTeacherSexText.setText((String)item.get("teacherSex"));
+        mTeacherAvaiGradeText.setText((String)item.get("avaiGrade"));
+        mTeacherAvaiSubjText.setText((String)item.get("avaiSubj"));
+        mTeacherPriceText.setText((String)item.get("price"));
     }
 
     /**
