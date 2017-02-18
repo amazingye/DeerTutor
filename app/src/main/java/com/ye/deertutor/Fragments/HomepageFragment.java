@@ -3,6 +3,7 @@ package com.ye.deertutor.Fragments;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -35,7 +36,8 @@ import com.nhaarman.listviewanimations.appearance.simple.SwingLeftInAnimationAda
 import com.squareup.picasso.Picasso;
 import com.yalantis.euclid.library.EuclidListAdapter;
 import com.yalantis.euclid.library.EuclidState;
-import com.ye.deertutor.GetDataTask;
+
+import com.ye.deertutor.Activities.LoginActivity;
 import com.ye.deertutor.R;
 import com.ye.deertutor.models.DeerUser;
 import com.ye.deertutor.models.Teacher;
@@ -239,7 +241,10 @@ public class HomepageFragment extends android.app.Fragment{
                     @Override
                     public void onClick(View v) {
                         final DeerUser currentUser = BmobUser.getCurrentUser(DeerUser.class);
-                        if(currentUser.getType().equals("parent")){
+                        if(currentUser == null){
+                            Intent toLoginIntent = new Intent(getActivity(), LoginActivity.class);
+                            startActivity(toLoginIntent);
+                        }else if(currentUser.getType().equals("parent")){
                             currentUser.setAppointtedTeacherId(
                                     profilesList.get(position).get("teacherId").toString());
                             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
@@ -266,11 +271,9 @@ public class HomepageFragment extends android.app.Fragment{
                                         }
                                     })
                                     .show();
-
-
-                        }else {
-                            Toast.makeText(getActivity(),"您又不是家长，预约个什么鬼。",
-                                    Toast.LENGTH_LONG).show();
+                        }else if(currentUser.getType().equals("teacher")){
+                            new SweetAlertDialog(getActivity()).
+                                    setTitleText("您不是家长，无法使用预约功能噢~").show();
                         }
 
                     }
@@ -288,55 +291,9 @@ public class HomepageFragment extends android.app.Fragment{
     }
 
 
-    private void initView(View view) {
-        initPTRListView(view);
-        //initListView();
-    }
-
-    /**
-     * 设置下拉刷新的listview的动作
-     */
-    private void initPTRListView(View view) {
-        //mPullRefreshListView = (PullToRefreshListView)getView().findViewById(R.id.pull_refresh_list);
-        mPullRefreshListView = new PullToRefreshListView(view.getContext());
-        //设置拉动监听器
-        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-
-            @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-
-                // 开始执行异步任务，传入适配器来进行数据改变
-                new GetDataTask(mPullRefreshListView,
-                        /*mAdapter*/mListViewAnimationAdapter,/*mListItems*/profilesList).execute();
-            }
-        });
-
-        // 添加滑动到底部的监听器
-        mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
-
-            @Override
-            public void onLastItemVisible() {
-                Toast.makeText(getActivity(), "已经到底了", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //mPullRefreshListView.isScrollingWhileRefreshingEnabled();//看刷新时是否允许滑动
-        //在刷新时允许继续滑动
-        //mPullRefreshListView.setScrollingWhileRefreshingEnabled(true);
-        //mPullRefreshListView.getMode();//得到模式
-        //上下都可以刷新的模式。这里有两个选择：Mode.PULL_FROM_START，Mode.BOTH，PULL_FROM_END
-        mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
 
-    }
 
-    /**
-     * 设置listview的适配器
-     */
-    private void initListView() {
-        //通过getRefreshableView()来得到一个listview对象
-
-}
 
 
 

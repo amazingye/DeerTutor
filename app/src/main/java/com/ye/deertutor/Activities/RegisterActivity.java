@@ -1,6 +1,7 @@
 package com.ye.deertutor.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +18,11 @@ import com.ye.deertutor.models.Teacher;
 
 import java.util.List;
 
+import cn.bmob.sms.listener.RequestSMSCodeListener;
+import cn.bmob.sms.listener.VerifySMSCodeListener;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobSMS;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -26,10 +31,12 @@ public class RegisterActivity extends Activity{
 
     public EditText nickNameEdit;
     public EditText pswdEdit;
-    public EditText emailEdit;
+    public EditText telEdit;
+    public EditText vercodeEdit;
     public RadioGroup typeRb;
     public RadioButton teacher;
     public RadioButton parent;
+    public Button getVerCodeButton;
     public Button registerButton;
 
     //public TextView userNameShowText;
@@ -38,21 +45,44 @@ public class RegisterActivity extends Activity{
 
     public DeerUser deerUser = new DeerUser();
 
+    public String tel;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         nickNameEdit = (EditText)findViewById(R.id.nicknameedit);
         pswdEdit = (EditText)findViewById(R.id.pswdedit);
-        emailEdit = (EditText)findViewById(R.id.emailedit);
+        telEdit = (EditText)findViewById(R.id.teledit);
+        vercodeEdit = (EditText)findViewById(R.id.vercodeedit);
+        //emailEdit = (EditText)findViewById(R.id.emailedit);
+
 
         typeRb = (RadioGroup)findViewById(R.id.typerg);
         teacher = (RadioButton)findViewById(R.id.teacherrb);
         parent = (RadioButton)findViewById(R.id.parentrb);
 
+        getVerCodeButton = (Button)findViewById(R.id.getvercodebutton);
         registerButton = (Button)findViewById(R.id.registerbutton);
 
         //userNameShowText = (TextView)findViewById(R.id.usernameshowtext);
+
+        getVerCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tel = telEdit.getText().toString();
+                cn.bmob.sms.BmobSMS.requestSMSCode(RegisterActivity.this, tel, "deerMsg", new RequestSMSCodeListener() {
+                    @Override
+                    public void done(Integer integer, cn.bmob.sms.exception.BmobException e) {
+                        Toast.makeText(RegisterActivity.this,"验证码已发送",Toast.LENGTH_SHORT).show();
+                        registerButton.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+
+
+
 
         typeRb.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -71,24 +101,38 @@ public class RegisterActivity extends Activity{
                 switch (view.getId()){
                     case R.id.registerbutton:
 
-                        String nickName = nickNameEdit.getText().toString();
-                        String pswd = pswdEdit.getText().toString();
-                        String email = emailEdit.getText().toString();
+                        String vercode = vercodeEdit.getText().toString();
 
-                        deerUser.setUsername(nickName);
-                        deerUser.setPassword(pswd);
-                        deerUser.setEmail(email);
-                        deerUser.setType(typeString);
-
-                        deerUser.signUp(new SaveListener<DeerUser>() {
+                        cn.bmob.sms.BmobSMS.verifySmsCode(RegisterActivity.this, tel,vercode , new VerifySMSCodeListener() {
                             @Override
-                            public void done(DeerUser s, BmobException e) {
-                                if(e==null){
-                                    Toast.makeText(RegisterActivity.this,
-                                            "注册成功",Toast.LENGTH_LONG).show();
-                                    addByType();
-                                }else{
-                                    e.printStackTrace();
+                            public void done(cn.bmob.sms.exception.BmobException e) {
+                                if(e ==null){
+                                    String nickName = nickNameEdit.getText().toString();
+                                    String pswd = pswdEdit.getText().toString();
+                                    //String email = emailEdit.getText().toString();
+                                    tel = telEdit.getText().toString();
+
+                                    deerUser.setUsername(nickName);
+                                    deerUser.setPassword(pswd);
+                                    //deerUser.setEmail(email);
+                                    deerUser.setType(typeString);
+                                    deerUser.setMobilePhoneNumber(tel);
+
+                                    deerUser.signUp(new SaveListener<DeerUser>() {
+                                        @Override
+                                        public void done(DeerUser s, BmobException e) {
+                                            if(e==null){
+                                                Toast.makeText(RegisterActivity.this,
+                                                        "注册成功",Toast.LENGTH_LONG).show();
+                                                addByType();
+                                            }else{
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                }else {
+                                   Toast.makeText(RegisterActivity.this,
+                                           e.getMessage(),Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -102,13 +146,13 @@ public class RegisterActivity extends Activity{
 
     public void addByType(){
         BmobQuery<DeerUser> query = new BmobQuery<DeerUser>();
-        query.addWhereEqualTo("email",deerUser.getEmail());
+        query.addWhereEqualTo("mobilePhoneNumber",deerUser.getMobilePhoneNumber());
         query.findObjects(new FindListener<DeerUser>() {
             @Override
             public void done(List<DeerUser> list, BmobException e) {
                 if(e==null){
                     for(DeerUser deerUser2 : list){
-                        //userNameShowText.setText(deerUser2.getUsername());
+
                         if(deerUser2.getType().equals("teacher")){
                             addToTeacher(deerUser2);
                         }else if(deerUser2.getType().equals("parent")){

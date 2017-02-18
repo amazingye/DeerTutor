@@ -1,6 +1,5 @@
 package com.ye.deertutor.Activities;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -19,10 +18,10 @@ import com.ye.deertutor.Fragments.MineFragment;
 import com.ye.deertutor.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bmob.sms.BmobSMS;
 import cn.bmob.v3.Bmob;
 
 public class MainActivity extends EuclidActivity implements View.OnClickListener{
@@ -56,6 +55,7 @@ public class MainActivity extends EuclidActivity implements View.OnClickListener
         initView();
         setChoiceItem(0);
         Bmob.initialize(this, "cfe590c37becfa3b8042d7cadefaa0be");
+        BmobSMS.initialize(this,"cfe590c37becfa3b8042d7cadefaa0be");
     }
 
     @Override                 //此方法已在HomepageFragment中重写

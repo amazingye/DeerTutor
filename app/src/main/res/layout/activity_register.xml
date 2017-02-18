@@ -32,7 +32,7 @@
 
     </TableRow>
 
-    <TableRow>
+    <!--<TableRow>
         <TextView
             android:layout_height="wrap_content"
             android:text="邮箱"/>
@@ -41,9 +41,32 @@
             android:layout_height="wrap_content"
             android:id="@+id/emailedit" />
 
+    </TableRow>-->
+
+    <TableRow>
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="电话"/>
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:id="@+id/teledit" />
     </TableRow>
 
     <TableRow>
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="验证码"/>
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:id="@+id/vercodeedit" />
+
+    </TableRow>
+
+    <TableRow>
+
+
         <TextView
             android:layout_height="wrap_content"
             android:text="请问您是？" />
@@ -65,9 +88,17 @@
 
     <TableRow>
         <Button
+            android:id="@+id/getvercodebutton"
+            android:text="点击获取验证码"
+            android:layout_span="2"/>
+    </TableRow>
+
+    <TableRow>
+        <Button
             android:id="@+id/registerbutton"
             android:text="注册"
-            android:layout_span="2"/>
+            android:layout_span="2"
+            android:visibility="invisible"/>
     </TableRow>
 
 </TableLayout>
