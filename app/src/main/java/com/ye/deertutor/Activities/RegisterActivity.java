@@ -26,6 +26,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class RegisterActivity extends Activity{
 
@@ -51,11 +52,10 @@ public class RegisterActivity extends Activity{
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        nickNameEdit = (EditText)findViewById(R.id.nicknameedit);
+        //nickNameEdit = (EditText)findViewById(R.id.nicknameedit);
         pswdEdit = (EditText)findViewById(R.id.pswdedit);
         telEdit = (EditText)findViewById(R.id.teledit);
         vercodeEdit = (EditText)findViewById(R.id.vercodeedit);
-        //emailEdit = (EditText)findViewById(R.id.emailedit);
 
 
         typeRb = (RadioGroup)findViewById(R.id.typerg);
@@ -74,8 +74,15 @@ public class RegisterActivity extends Activity{
                 cn.bmob.sms.BmobSMS.requestSMSCode(RegisterActivity.this, tel, "deerMsg", new RequestSMSCodeListener() {
                     @Override
                     public void done(Integer integer, cn.bmob.sms.exception.BmobException e) {
-                        Toast.makeText(RegisterActivity.this,"验证码已发送",Toast.LENGTH_SHORT).show();
-                        registerButton.setVisibility(View.VISIBLE);
+                        if(e == null){
+                            Toast.makeText(RegisterActivity.this,"验证码已发送",Toast.LENGTH_SHORT).show();
+                            registerButton.setVisibility(View.VISIBLE);
+                            getVerCodeButton.setText("请稍等...");
+                            getVerCodeButton.setClickable(false);
+                        }else {
+                            e.printStackTrace();
+                        }
+
                     }
                 });
             }
@@ -107,12 +114,12 @@ public class RegisterActivity extends Activity{
                             @Override
                             public void done(cn.bmob.sms.exception.BmobException e) {
                                 if(e ==null){
-                                    String nickName = nickNameEdit.getText().toString();
+                                    //String nickName = nickNameEdit.getText().toString();
                                     String pswd = pswdEdit.getText().toString();
                                     //String email = emailEdit.getText().toString();
                                     tel = telEdit.getText().toString();
 
-                                    deerUser.setUsername(nickName);
+                                    deerUser.setUsername("小鹿用户"+tel);
                                     deerUser.setPassword(pswd);
                                     //deerUser.setEmail(email);
                                     deerUser.setType(typeString);
@@ -122,11 +129,10 @@ public class RegisterActivity extends Activity{
                                         @Override
                                         public void done(DeerUser s, BmobException e) {
                                             if(e==null){
-                                                Toast.makeText(RegisterActivity.this,
-                                                        "注册成功",Toast.LENGTH_LONG).show();
                                                 addByType();
                                             }else{
-                                                e.printStackTrace();
+                                                Toast.makeText(RegisterActivity.this,
+                                                        ""+e.getMessage(),Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     });
@@ -176,9 +182,13 @@ public class RegisterActivity extends Activity{
             @Override
             public void done(String s, BmobException e) {
                 if(e==null){
+                    new SweetAlertDialog(RegisterActivity.this).
+                            setTitleText("教师注册成功！").show();
                     Log.i("bmob","教师保存成功");
                     finish();
                 }else{
+                    Toast.makeText(RegisterActivity.this,
+                            ""+e.getMessage(),Toast.LENGTH_LONG).show();
                     Log.i("bmob","教师保存失败："+e.getMessage());
                 }
             }
@@ -192,9 +202,13 @@ public class RegisterActivity extends Activity{
             @Override
             public void done(String s, BmobException e) {
                 if(e==null){
+                    new SweetAlertDialog(RegisterActivity.this).
+                            setTitleText("家长注册成功！").show();
                     Log.i("bmob","家长保存成功");
                     finish();
                 }else{
+                    Toast.makeText(RegisterActivity.this,
+                            ""+e.getMessage(),Toast.LENGTH_LONG).show();
                     Log.i("bmob","家长保存失败："+e.getMessage());
                 }
             }

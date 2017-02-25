@@ -2,8 +2,12 @@ package com.ye.deertutor.Activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,6 +54,19 @@ public class MainActivity extends EuclidActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*设置沉浸式状态栏*/
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+        }
+
+
         setContentView(R.layout.main_layout);
         fragmentManager = getFragmentManager();
         initView();
@@ -81,8 +98,6 @@ public class MainActivity extends EuclidActivity implements View.OnClickListener
 
 
     private void initView(){
-/*        titleText = (TextView)findViewById(R.id.title_text_tv);
-        titleText.setText("首 页");*/
 
 
         //初始化底部导航栏控件

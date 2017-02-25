@@ -39,6 +39,8 @@ public class TeacherInfoActivity extends Activity {
     public TextView teacherDescribe;
     public TextView verifyStatus;
     private Button toTeacherModifyButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +63,13 @@ public class TeacherInfoActivity extends Activity {
             }
         });
 
-        initView();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initView();
+            }
+        });
+
 
         toTeacherModifyButton = (Button)findViewById(R.id.toteachermodify);
         toTeacherModifyButton.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +104,7 @@ public class TeacherInfoActivity extends Activity {
                         verifyStatus.setText(teacher.getVerifyStatus());
                     }
                 }else {
-                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                    Log.i("bmob teacherInfo","失败："+e.getErrorCode()+","+e.getMessage());
                 }
             }
         });
@@ -108,12 +116,12 @@ public class TeacherInfoActivity extends Activity {
 
         //这是个很不符常规的写法嘤嘤嘤~~
         //允许网络请求动作在主线程中执行
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+        /*StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads().detectDiskWrites().detectNetwork()
                 .penaltyLog().build());
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
                 .detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
-                .penaltyLog().penaltyDeath().build());
+                .penaltyLog().penaltyDeath().build());*/
 
         URL myFileURL;
         Bitmap bitmap=null;

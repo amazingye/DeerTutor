@@ -6,13 +6,13 @@
 
     <FrameLayout
         android:id="@+id/toolbar_list"
-        android:background="@color/orange"
+        android:background="@color/salmon"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
         <TextView
             android:text="@string/title_following"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:layout_gravity="center"
             android:fontFamily="sans-serif-bold"
             android:textSize="@dimen/text_size_toolbar_title"

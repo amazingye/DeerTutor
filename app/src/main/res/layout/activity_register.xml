@@ -1,104 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/bg"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:stretchColumns="1"
     tools:context="com.ye.deertutor.Activities.RegisterActivity">
 
-    <TableRow>
+
+    <RelativeLayout
+        android:id="@+id/registertext_LL"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp">
+
         <TextView
+            android:id="@+id/register_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="用户名" />
+            android:text="欢 迎"
+            android:textColor="@color/white"
+            android:textSize="50sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/register_textLL2"
+        android:layout_below="@id/registertext_LL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="注册您的小鹿家教账号"
+            android:textSize="24sp"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/register_input_LL"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/register_textLL2"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
 
         <EditText
-            android:id="@+id/nicknameedit"
-            android:layout_height="wrap_content" />
-    </TableRow>
+            android:background="@mipmap/roundedrectangle2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/teledit"
+            android:textColor="@color/white"
+            android:hint="您 的 电 话"
+            android:textColorHint="@color/white"
+            android:gravity="center"/>
 
-    <TableRow>
-        <TextView
-            android:layout_height="wrap_content"
-            android:text="密码"/>
 
         <EditText
+            android:layout_marginTop="25dp"
+            android:background="@mipmap/roundedrectangle2"
+            android:layout_below="@+id/teledit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:id="@+id/pswdedit"
-            android:layout_height="wrap_content" />
+            android:textColor="@color/white"
+            android:hint="设 置 密 码"
+            android:textColorHint="@color/white"
+            android:gravity="center"/>
 
-    </TableRow>
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:id="@+id/vercode_LL"
+            android:layout_below="@id/pswdedit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <!--<TableRow>
-        <TextView
-            android:layout_height="wrap_content"
-            android:text="邮箱"/>
+            <EditText
+                android:background="@mipmap/roundedrectangle2"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="6"
+                android:id="@+id/vercodeedit"
+                android:textColor="@color/white"
+                android:hint="验 证 码"
+                android:textColorHint="@color/white"
+                android:gravity="center"/>
 
-        <EditText
-            android:layout_height="wrap_content"
-            android:id="@+id/emailedit" />
+            <Button
+                android:layout_marginLeft="20dp"
+                android:id="@+id/getvercodebutton"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="2"
+                android:text="获取验证码"
+                android:textSize="14dp"
+                android:textColor="@color/white"
+                android:background="@drawable/shape"/>
+        </LinearLayout>
 
-    </TableRow>-->
-
-    <TableRow>
-        <TextView
-            android:layout_height="wrap_content"
-            android:text="电话"/>
-
-        <EditText
-            android:layout_height="wrap_content"
-            android:id="@+id/teledit" />
-    </TableRow>
-
-    <TableRow>
-        <TextView
-            android:layout_height="wrap_content"
-            android:text="验证码"/>
-
-        <EditText
-            android:layout_height="wrap_content"
-            android:id="@+id/vercodeedit" />
-
-    </TableRow>
-
-    <TableRow>
-
-
-        <TextView
-            android:layout_height="wrap_content"
-            android:text="请问您是？" />
 
         <RadioGroup
+            android:layout_marginTop="14dp"
+            android:layout_below="@id/vercode_LL"
+            android:gravity="center"
             android:id="@+id/typerg"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
+
             <RadioButton
+                android:layout_height="wrap_content"
                 android:id="@+id/teacherrb"
-                android:text="教师"/>
+                android:text="我是教师"
+                android:textColor="@color/white"/>
             <RadioButton
                 android:id="@+id/parentrb"
-                android:text="家长"/>
-
+                android:text="我是家长"
+                android:textColor="@color/white"/>
         </RadioGroup>
-    </TableRow>
 
-    <TableRow>
-        <Button
-            android:id="@+id/getvercodebutton"
-            android:text="点击获取验证码"
-            android:layout_span="2"/>
-    </TableRow>
+    </RelativeLayout>
 
-    <TableRow>
+
+
+    <RelativeLayout
+        android:layout_below="@id/register_input_LL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
         <Button
             android:id="@+id/registerbutton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:text="注册"
-            android:layout_span="2"
-            android:visibility="invisible"/>
-    </TableRow>
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:background="@mipmap/loginbutton" />
+    </RelativeLayout>
 
-</TableLayout>
+
+</RelativeLayout>

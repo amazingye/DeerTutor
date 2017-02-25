@@ -123,9 +123,9 @@ public class HomepageFragment extends android.app.Fragment{
 
 
         BmobQuery<Teacher> query1 = new BmobQuery<Teacher>();
-        query1.addWhereEqualTo("sex","M");
+        query1.addWhereEqualTo("sex","女");
         BmobQuery<Teacher> query2 = new BmobQuery<Teacher>();
-        query2.addWhereEqualTo("sex","F");
+        query2.addWhereEqualTo("sex","男");
         List<BmobQuery<Teacher>> queries = new ArrayList<BmobQuery<Teacher>>();
         queries.add(query1);
         queries.add(query2);
@@ -148,7 +148,7 @@ public class HomepageFragment extends android.app.Fragment{
                                 profileMap.put(EuclidListAdapter.KEY_AVATAR,headiconUri);
                                 profileMap.put(EuclidListAdapter.KEY_NAME, teacher.getRealName());
                                 profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_SHORT, teacher.getTeacherDescribe());
-                                profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_FULL, getString(R.string.lorem_ipsum_long));
+                                //profileMap.put(EuclidListAdapter.KEY_DESCRIPTION_FULL, getString(R.string.lorem_ipsum_long));
                                 profileMap.put("teacherId",teacher.getObjectId());
                                 profileMap.put("teacherSex",teacher.getSex());
                                 profileMap.put("avaiGrade",teacher.getAvailableGrade());

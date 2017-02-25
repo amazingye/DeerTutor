@@ -16,4 +16,3 @@
 #   public *;
 #}
 
--keep rxjava-1.1.6.** { public *; }

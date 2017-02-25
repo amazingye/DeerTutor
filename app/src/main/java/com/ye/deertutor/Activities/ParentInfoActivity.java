@@ -52,7 +52,13 @@ public class ParentInfoActivity extends Activity {
         childGrade = (TextView)findViewById(R.id.childgrade);
         address = (TextView)findViewById(R.id.address);
 
-        initView();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initView();
+            }
+        });
+
 
         toParentModifyButton = (Button)findViewById(R.id.toparentmodify);
         toParentModifyButton.setOnClickListener(new View.OnClickListener() {
@@ -94,14 +100,14 @@ public class ParentInfoActivity extends Activity {
 
     public static Bitmap getHttpBitmap(String url){
 
-        //这是个很不符常规的写法嘤嘤嘤~~
+        //不符常规的写法~~
         //允许网络请求动作在主线程中执行
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+        /*StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads().detectDiskWrites().detectNetwork()
                 .penaltyLog().build());
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
                 .detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
-                .penaltyLog().penaltyDeath().build());
+                .penaltyLog().penaltyDeath().build());*/
 
         URL myFileURL;
         Bitmap bitmap=null;

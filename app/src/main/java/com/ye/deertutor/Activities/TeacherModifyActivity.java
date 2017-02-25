@@ -37,6 +37,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
+import cn.finalteam.galleryfinal.FunctionConfig;
+import cn.finalteam.galleryfinal.GalleryFinal;
+import cn.finalteam.galleryfinal.model.PhotoInfo;
 
 public class TeacherModifyActivity extends Activity {
     public EditText teacherUsernameEdit;
@@ -57,6 +60,8 @@ public class TeacherModifyActivity extends Activity {
 
     public Button teacherModifySaveButton;
 
+    public int REQUEST_CODE_GALLERY = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,9 +78,14 @@ public class TeacherModifyActivity extends Activity {
         teacherHeadiconEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);  //打开媒体库，挑选图片
-                intent.setType("image/*");
-                startActivityForResult(intent,1);
+                /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);  //打开媒体库，挑选图片
+                intent.setType("image*//*");
+                startActivityForResult(intent,1);*/
+
+                FunctionConfig FCconfig = new FunctionConfig.Builder()
+                        .setMutiSelectMaxSize(1)
+                        .build();
+                GalleryFinal.openGalleryMuti(REQUEST_CODE_GALLERY,FCconfig,mCallback);
             }
         });
         teacherModifySaveButton.setOnClickListener(new View.OnClickListener() {
@@ -147,20 +157,11 @@ public class TeacherModifyActivity extends Activity {
 
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            upLoadHeadicon(data);
-        }
 
-    }
+    public void upLoadHeadicon(String path){
 
-    public void upLoadHeadicon(Intent data){
-        Uri uri = data.getData();
-        String path = getPath(this,uri);    //此处调用了适用于kitkat以上的获取path方法
-        getImage(path);
-
-        teacherHeadicon = new BmobFile(file);
+        File iconFile = new File(path);
+        teacherHeadicon = new BmobFile(iconFile);
         teacherHeadicon.uploadblock(new UploadFileListener() {
             @Override
             public void done(BmobException e) {
@@ -177,6 +178,26 @@ public class TeacherModifyActivity extends Activity {
             }
         });
     }
+
+
+
+    public GalleryFinal.OnHanlderResultCallback mCallback =
+            new GalleryFinal.OnHanlderResultCallback() {
+                @Override
+                public void onHanlderSuccess(int reqeustCode, List<PhotoInfo> resultList) {
+                    String path = null;
+                    for(PhotoInfo photoInfo : resultList){
+                        getImage(photoInfo.getPhotoPath());
+                        path = getPath(TeacherModifyActivity.this,Uri.fromFile(file));
+                    }
+                    upLoadHeadicon(path);
+                }
+
+                @Override
+                public void onHanlderFailure(int requestCode, String errorMsg) {
+                    Log.i("onHanlderFailure",errorMsg);
+                }
+            };
 
 
 
